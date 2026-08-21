@@ -99,10 +99,24 @@ The base template only shipped assertions on `List products`. This version adds 
 
 ## CI/CD pipeline
 
-On every push/PR to `main` (see [.github/workflows/newman.yml](.github/workflows/newman.yml)):
+The pipeline (see [.github/workflows/newman.yml](.github/workflows/newman.yml)) runs automatically on every push/PR to `main`, **and can also be triggered manually** at any time:
 
 1. Install dependencies (`npm ci`) and Newman + `newman-reporter-htmlextra`.
 2. Start the mock API (`npm run tern-on-api`) and wait until it responds.
 3. Run `newman run store.collection.json` with `cli` + `htmlextra` reporters.
 4. Upload the HTML report as a workflow artifact.
 5. Publish the report to the `gh-pages` branch, served at https://andriygvozd.github.io/Postman-newman-ghActions/.
+
+### Running the tests manually (no code change needed)
+
+Want to check the API right now, without pushing anything? Trigger the pipeline by hand from the GitHub Actions tab:
+
+1. Open the repository on GitHub: https://github.com/AndriyGvozd/Postman-newman-ghActions
+2. Click the **Actions** tab (top navigation bar, between *Pull requests* and *Projects*).
+3. In the left sidebar, click **Newman API Tests** (the only workflow listed).
+4. On the right, click the **Run workflow** dropdown button.
+5. Leave the branch as **main** and click the green **Run workflow** button inside the dropdown.
+6. A new run appears at the top of the list within a few seconds (a yellow/orange dot means it's in progress). Click it to watch the live logs.
+7. When it finishes with a green check, open **Deploy report to GitHub Pages** in the run's job list, or just go straight to the published report at https://andriygvozd.github.io/Postman-newman-ghActions/ — it's overwritten with the fresh results (usually live within a minute of the run finishing).
+
+No local setup, no Postman app required — this runs the exact same collection (`store.collection.json`) against a freshly started mock API on GitHub's runner.
