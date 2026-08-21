@@ -71,6 +71,12 @@
                   "    pm.expect(jsonData.name).to.eql(requestBody.name);",
                   "    pm.expect(jsonData.price).to.eql(requestBody.price);",
                   "    pm.expect(jsonData.sku).to.eql(requestBody.sku);",
+                  "});",
+                  "",
+                  "pm.test(\"Captured generated product id for later steps\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set(\"productId\", jsonData.id);",
+                  "    pm.expect(jsonData.id).to.be.a(\"number\");",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -118,7 +124,7 @@
                   "",
                   "pm.test(\"Returned product has correct id\", function () {",
                   "    const jsonData = pm.response.json();",
-                  "    pm.expect(jsonData.id).to.eql(3);",
+                  "    pm.expect(jsonData.id).to.eql(Number(pm.collectionVariables.get(\"productId\")));",
                   "});",
                   "",
                   "pm.test(\"Response matches product schema\", function () {",
@@ -143,13 +149,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/products/3",
+              "raw": "{{baseUrl}}/products/{{productId}}",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "products",
-                "3"
+                "{{productId}}"
               ]
             }
           },
@@ -187,7 +193,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"id\": 4,\r\n    \"name\": \"banana\",\r\n    \"price\": 155,\r\n    \"sku\": 123321123,\r\n    \"description\": \"changed description\"\r\n}",
+              "raw": "{\r\n    \"id\": {{productId}},\r\n    \"name\": \"banana\",\r\n    \"price\": 155,\r\n    \"sku\": 123321123,\r\n    \"description\": \"changed description\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -229,13 +235,13 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/products/4",
+              "raw": "{{baseUrl}}/products/{{productId}}",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "products",
-                "4"
+                "{{productId}}"
               ]
             }
           },
@@ -260,13 +266,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/products/4",
+              "raw": "{{baseUrl}}/products/{{productId}}",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "products",
-                "4"
+                "{{productId}}"
               ]
             }
           },
@@ -431,6 +437,12 @@
                   "    const requestBody = JSON.parse(pm.request.body.raw);",
                   "    pm.expect(jsonData.name).to.eql(requestBody.name);",
                   "    pm.expect(jsonData.sku).to.eql(requestBody.sku);",
+                  "});",
+                  "",
+                  "pm.test(\"Captured generated order id for later steps\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set(\"orderId\", jsonData.id);",
+                  "    pm.expect(jsonData.id).to.be.a(\"number\");",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -478,7 +490,7 @@
                   "",
                   "pm.test(\"Returned order has correct id\", function () {",
                   "    const jsonData = pm.response.json();",
-                  "    pm.expect(jsonData.id).to.eql(3);",
+                  "    pm.expect(jsonData.id).to.eql(Number(pm.collectionVariables.get(\"orderId\")));",
                   "});",
                   "",
                   "pm.test(\"Response matches order schema\", function () {",
@@ -502,13 +514,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/orders/3",
+              "raw": "{{baseUrl}}/orders/{{orderId}}",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "orders",
-                "3"
+                "{{orderId}}"
               ]
             }
           },
@@ -545,7 +557,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"id\": 4,\r\n    \"name\": \"order5\",\r\n    \"sku\": 123425445656765\r\n}",
+              "raw": "{\r\n    \"id\": {{orderId}},\r\n    \"name\": \"order5\",\r\n    \"sku\": 123425445656765\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -587,13 +599,13 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/orders/4",
+              "raw": "{{baseUrl}}/orders/{{orderId}}",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "orders",
-                "4"
+                "{{orderId}}"
               ]
             }
           },
@@ -618,13 +630,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/orders/4",
+              "raw": "{{baseUrl}}/orders/{{orderId}}",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "orders",
-                "4"
+                "{{orderId}}"
               ]
             }
           },
@@ -790,6 +802,12 @@
                   "    pm.expect(jsonData.firstName).to.eql(requestBody.firstName);",
                   "    pm.expect(jsonData.lastName).to.eql(requestBody.lastName);",
                   "    pm.expect(jsonData.email).to.eql(requestBody.email);",
+                  "});",
+                  "",
+                  "pm.test(\"Captured generated user id for later steps\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set(\"userId\", jsonData.id);",
+                  "    pm.expect(jsonData.id).to.be.a(\"number\");",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -837,7 +855,7 @@
                   "",
                   "pm.test(\"Returned user has correct id\", function () {",
                   "    const jsonData = pm.response.json();",
-                  "    pm.expect(jsonData.id).to.eql(3);",
+                  "    pm.expect(jsonData.id).to.eql(Number(pm.collectionVariables.get(\"userId\")));",
                   "});",
                   "",
                   "pm.test(\"Response matches user schema\", function () {",
@@ -862,13 +880,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/users/3",
+              "raw": "{{baseUrl}}/users/{{userId}}",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "users",
-                "3"
+                "{{userId}}"
               ]
             }
           },
@@ -906,7 +924,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"firstName\": \"Ilon\",\r\n    \"lastName\": \"Mask\",\r\n    \"email\": \"ilon.mask@gmail.com\",\r\n    \"dateOfBirth\": \"2001-10-99\",\r\n    \"emailVerified\": true,\r\n    \"signUpDate\": \"2019-08-24\",\r\n    \"status\": \"active\",\r\n    \"level\": \"lord\",\r\n    \"id\": 10\r\n}",
+              "raw": "{\r\n    \"firstName\": \"Ilon\",\r\n    \"lastName\": \"Mask\",\r\n    \"email\": \"ilon.mask@gmail.com\",\r\n    \"dateOfBirth\": \"2001-10-99\",\r\n    \"emailVerified\": true,\r\n    \"signUpDate\": \"2019-08-24\",\r\n    \"status\": \"active\",\r\n    \"level\": \"lord\",\r\n    \"id\": {{userId}}\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -948,13 +966,13 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/users/10",
+              "raw": "{{baseUrl}}/users/{{userId}}",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "users",
-                "10"
+                "{{userId}}"
               ]
             }
           },
@@ -979,13 +997,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/users/10",
+              "raw": "{{baseUrl}}/users/{{userId}}",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "users",
-                "10"
+                "{{userId}}"
               ]
             }
           },
@@ -1110,6 +1128,18 @@
     {
       "key": "baseUrl",
       "value": "http://localhost:3000"
+    },
+    {
+      "key": "productId",
+      "value": ""
+    },
+    {
+      "key": "orderId",
+      "value": ""
+    },
+    {
+      "key": "userId",
+      "value": ""
     }
   ]
 }
