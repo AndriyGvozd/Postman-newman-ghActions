@@ -75,28 +75,6 @@ The base template only shipped assertions on `List products`. This version adds 
 - **Query-parameter behavior tests** — pagination (array length) and sorting (`array.slice().sort()` comparison) checks.
 - **State propagation via collection variables** — `pm.collectionVariables.set(...)` in `Create` captures the generated id; downstream requests read it back with `{{productId}}` (URL/body) or `pm.collectionVariables.get(...)` (assertions), keeping each resource's lifecycle self-contained.
 
-## Code review — does this suite cover the basics of API testing?
-
-**Covered:**
-- ✅ Happy-path CRUD for all three resources (Create / Read / Update / Delete)
-- ✅ Status codes (`200`, `201`, `404`)
-- ✅ Response time / performance budget
-- ✅ Response schema/contract validation (types + required fields)
-- ✅ Data integrity (response echoes request payload correctly)
-- ✅ Side-effect verification (delete actually removes the record)
-- ✅ Query-parameter behavior (pagination, sorting)
-- ✅ `AAA` structure, consistent naming, one concern per `pm.test`
-- ✅ No hardcoded record ids — each resource's `Create` request captures the generated id into a collection variable, reused by every subsequent step in that resource's lifecycle, so the suite doesn't depend on seed data or fixed run order
-
-**Gaps / recommendations:**
-- ⚠️ **No negative/invalid-input tests** — e.g. `POST` with a missing required field or wrong type should be asserted to return `400`/`422`; currently only valid payloads are exercised.
-- ⚠️ **No 404 test for `GET`/`PUT`/`DELETE` on a non-existent ID** as an isolated case — the only 404 coverage is the delete-then-verify chain, on the record the test itself just created.
-- ⚠️ **Schema validation only on single-item `GET`** — list endpoints (`List products`, `List orders`, `List users`) check `status` only, not that each array item matches the resource schema.
-- ⚠️ **`Content-Type` header check only exists on `List products`** — not applied consistently to the other requests.
-- ⚠️ **No edge cases for pagination/sorting** — e.g. `page` beyond the last page, invalid `sortKey`, `pageSize=0`.
-- ⚠️ **Inconsistent response-time budgets** (`200ms` for `List products`, `300ms` everywhere else) with no stated rationale — worth standardizing or documenting.
-- ⚠️ **No dedicated test/staging environment file** — only a single `baseUrl` collection variable; a proper Postman Environment (`local`, `ci`) would make the CI target explicit and swappable.
-
 ## CI/CD pipeline
 
 The pipeline (see [.github/workflows/newman.yml](.github/workflows/newman.yml)) runs automatically on every push/PR to `main`, **and can also be triggered manually** at any time:
@@ -107,7 +85,7 @@ The pipeline (see [.github/workflows/newman.yml](.github/workflows/newman.yml)) 
 4. Upload the HTML report as a workflow artifact.
 5. Publish the report to the `gh-pages` branch, served at https://andriygvozd.github.io/Postman-newman-ghActions/.
 
-### Running the tests manually (no code change needed)
+### Running the tests manually
 
 Want to check the API right now, without pushing anything? Trigger the pipeline by hand from the GitHub Actions tab:
 
