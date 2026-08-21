@@ -28,12 +28,13 @@ This resets `mockApi/db_stage.yaml` from `mockApi/db_back_up.yaml` and starts th
 Then, in a second terminal, either:
 
 - **Postman app** — import [store.collection.json](store.collection.json) and run it with the Collection Runner, or
-- **Newman CLI**:
+- **Newman CLI** — `newman` and `newman-reporter-htmlextra` are already listed as devDependencies, so `npm install` pulls them in:
 
 ```bash
-npm install -g newman newman-reporter-htmlextra
-newman run store.collection.json --reporters cli,htmlextra --reporter-htmlextra-export newman/index.html
+npm run test:api
 ```
+
+which runs `newman run store.collection.json -r cli,htmlextra --reporter-htmlextra-export newman/index.html` and writes the HTML report to `newman/index.html`.
 
 The `baseUrl` collection variable defaults to `http://localhost:3000`.
 
@@ -101,9 +102,9 @@ The base template only shipped assertions on `List products`. This version adds 
 
 The pipeline (see [.github/workflows/newman.yml](.github/workflows/newman.yml)) runs automatically on every push/PR to `main`, **and can also be triggered manually** at any time:
 
-1. Install dependencies (`npm ci`) and Newman + `newman-reporter-htmlextra`.
+1. Install dependencies (`npm ci`) — this also installs `newman` and `newman-reporter-htmlextra`, which are listed as devDependencies.
 2. Start the mock API (`npm run tern-on-api`) and wait until it responds.
-3. Run `newman run store.collection.json` with `cli` + `htmlextra` reporters.
+3. Run `npm run test:api` (Newman against `store.collection.json` with `cli` + `htmlextra` reporters).
 4. Upload the HTML report as a workflow artifact.
 5. Publish the report to the `gh-pages` branch, served at https://andriygvozd.github.io/Postman-newman-ghActions/.
 

@@ -26,9 +26,6 @@ jobs:
       - name: Install project dependencies
         run: npm ci
 
-      - name: Install Newman and HTML reporter
-        run: npm install -g newman newman-reporter-htmlextra
-
       - name: Start mock API server
         run: nohup npm run tern-on-api > server.log 2>&1 &
 
@@ -48,9 +45,7 @@ jobs:
       - name: Run Newman tests
         run: |
           mkdir -p newman
-          newman run store.collection.json \
-            --reporters cli,htmlextra \
-            --reporter-htmlextra-export newman/index.html
+          npm run test:api
 
       - name: Upload Newman report artifact
         if: always()
