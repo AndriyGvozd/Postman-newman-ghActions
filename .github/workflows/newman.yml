@@ -1,0 +1,68 @@
+name: Newman API Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install project dependencies
+        run: npm ci
+
+      - name: Install Newman and HTML reporter
+        run: npm install -g newman newman-reporter-htmlextra
+
+      - name: Start mock API server
+        run: nohup npm run tern-on-api > server.log 2>&1 &
+
+      - name: Wait for mock API to be ready
+        run: |
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:3000/products > /dev/null; then
+              echo "Mock API is up"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "Mock API failed to start in time"
+          cat server.log
+          exit 1
+
+      - name: Run Newman tests
+        run: |
+          mkdir -p newman
+          newman run store.collection.json \
+            --reporters cli,htmlextra \
+            --reporter-htmlextra-export newman/index.html
+
+      - name: Upload Newman report artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: newman-report
+          path: newman/index.html
+
+      - name: Deploy report to GitHub Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./newman
+          publish_branch: gh-pages
